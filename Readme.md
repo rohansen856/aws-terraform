@@ -1,7 +1,8 @@
 # AWS Infrastructure Deployment with Terraform
 
 This repository demonstrates Infrastructure as Code (IaC) using Terraform to provision and manage AWS resources. The project includes two separate deployments - a simple EC2 instance and a production-ready EKS (Elastic Kubernetes Service) cluster.
-<span style="color:red">All the API keys and secrets used in the repository are inactive, so please don's think of misuing them</span>
+</br>
+*All the API keys and secrets used in the repository are inactive, so please don's think of misuing them*
 
 ## Repository Structure
 ```sh
@@ -45,6 +46,7 @@ terraform destroy
 - Two managed node groups with t3.small instances for workload distribution
 - Auto-scaling configuration (min: 1, max: 3 nodes)
 - Proper Kubernetes tagging for load balancer integration
+- configuring simple ingress controller using nginx for the cluster
 
 > Screenshots
 ![Screenshot from 2025-04-21 14-46-32](https://github.com/user-attachments/assets/db30c65f-6a44-445d-87d8-cd59d754f47b)
@@ -61,3 +63,14 @@ terraform plan
 terraform apply
 ```
 
+### Testing the ingress controller
+The configuration in `eks_cluster/ingress_controller.tf` deploys the NGINX Ingress Controller on the EKS cluster. The ingress controller acts as a Layer 7 load balancer that routes external HTTP/HTTPS traffic to the appropriate services within the Kubernetes cluster based on defined rules.
+> Checking if the ingress controller pods are running:
+
+```sh
+kubectl get pods -n ingress-nginx
+```
+> Finding the external load balancer address
+```sh
+kubectl get service nginx-ingress-controller -n ingress-nginx
+```
